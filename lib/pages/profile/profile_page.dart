@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: BorderRadius.circular(100.0),
                   child: Container(
                     width: 200.0,
                     height: 200.0,
