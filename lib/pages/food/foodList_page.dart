@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_food/models/food_detail.dart';
 import 'package:flutter_food/models/food_item.dart';
 
 class FoodListPage extends StatefulWidget {
@@ -18,7 +20,8 @@ class _FoodListPageState extends State<FoodListPage> {
     FoodItem(id: 6, name: "ผัดซีอิ๋ว", price: 30, image: 'pad_sie_eew.jpg'),
     FoodItem(id: 7, name: "ผัดไทย", price: 30, image: 'pad_thai.jpg'),
     FoodItem(id: 8, name: "ราดหน้า", price: 30, image: 'rad_na.jpg'),
-    FoodItem(id: 9, name: "ส้มตำไก่ยาง", price: 30, image: 'som_tum_kai_yang.jpg'),
+    FoodItem(
+        id: 9, name: "ส้มตำไก่ยาง", price: 30, image: 'som_tum_kai_yang.jpg'),
   ];
 
   @override
@@ -33,7 +36,12 @@ class _FoodListPageState extends State<FoodListPage> {
                 margin: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: () {
-                    print(item.toString());
+                    Navigator.pushNamed(context, FoodDetail.routeName,
+                        arguments: FoodItem(
+                            id: item.id,
+                            name: item.name,
+                            price: item.price,
+                            image: item.image));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -44,7 +52,19 @@ class _FoodListPageState extends State<FoodListPage> {
                         SizedBox(
                           width: 8.0,
                         ),
-                        Text(item.name),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.name,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            Text(
+                              "${item.price.toString()} บาท",
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
