@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_food/pages/home/home_page.dart';
-
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
+
   const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -12,7 +15,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   var input = '';
-  String password = '123456';
   int spotPassword = 0;
 
   @override
@@ -92,6 +94,26 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
+  Future<void> _connectToAPI() async {
+    var url = Uri.parse('https://cpsu-test-api.herokuapp.com/login');
+    var response = await http.post(url, body: {'pin': input});
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonBody = json.decode(response.body);
+      String status = jsonBody['status'];
+      String? message = jsonBody['message'];
+      bool data = jsonBody['data'];
+
+      if (data) {
+        Navigator.pushReplacementNamed(context, HomePage.routeName);
+      } else {
+        _showMaterialDialog();
+        spotPassword = 0;
+        input = '';
+      }
+    }
+  }
+
   void _handleClickButton(int num) {
     setState(() {
       if (num == -1) {
@@ -106,13 +128,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
       if (input.length == 6) {
-        if (input == password) {
-          Navigator.pushReplacementNamed(context,HomePage.routeName);
-        } else {
-          _showMaterialDialog();
-          spotPassword = 0;
-          input = '';
-        }
+        _connectToAPI();
       }
     });
   }
@@ -122,7 +138,10 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("ERROR!",style: TextStyle(color: Colors.black),),
+          title: Text(
+            "ERROR!",
+            style: TextStyle(color: Colors.black),
+          ),
           content: Text("Invalid PIN. Please try again!"),
           actions: [
             // ปุ่ม OK ใน dialog
